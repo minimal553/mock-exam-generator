@@ -1,0 +1,31 @@
+.worktrees/
+
+# Python runtime
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Editor/OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Local env
+.env
+.env.*
+
+# Generated runtime state
+state/
+output/
+
+# Private training materials and datasets
+data/
+课件/
+联考试卷/
+联考A+国省考（共50套）/
+obsidian_gongkao_archive/

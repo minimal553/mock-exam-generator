@@ -1,0 +1,941 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>公考学习机</title>
+  <style>
+    :root {
+      --paper: #f7f2e8;
+      --panel: rgba(255, 252, 245, 0.94);
+      --ink: #1c2430;
+      --muted: #6b7280;
+      --line: #dfd2b8;
+      --brand: #0f766e;
+      --accent: #b45309;
+      --danger: #9f1239;
+      --shadow: 0 10px 30px rgba(56, 34, 12, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(180, 83, 9, 0.16), transparent 24%),
+        linear-gradient(180deg, #fbf7ef 0%, var(--paper) 100%);
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 1180px;
+      margin: 22px auto 40px;
+      padding: 0 16px;
+    }
+    .hero, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+    .hero {
+      padding: 20px 22px;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    .panel {
+      padding: 16px;
+    }
+    .panel h2, .panel h3 {
+      margin: 0 0 12px;
+    }
+    .field {
+      margin-bottom: 12px;
+    }
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+    }
+    input, textarea {
+      width: 100%;
+      border: 1px solid #d8ccb1;
+      border-radius: 12px;
+      padding: 11px 12px;
+      font-size: 14px;
+      background: #fffef8;
+      color: #111827;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .primary {
+      color: white;
+      background: linear-gradient(135deg, var(--brand), #0ea5a4);
+    }
+    .good {
+      color: white;
+      background: linear-gradient(135deg, #0b8f56, #22c55e);
+    }
+    .bad {
+      color: white;
+      background: linear-gradient(135deg, var(--danger), #ef4444);
+    }
+    .ghost {
+      color: #1f2937;
+      background: linear-gradient(135deg, #ead9b0, #f3c66d);
+    }
+    .status {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .progress-shell {
+      margin-top: 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fffaf0;
+    }
+    .progress-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #eadfca;
+      overflow: hidden;
+    }
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--brand), #14b8a6);
+      transition: width 0.25s ease;
+    }
+    .stack {
+      display: grid;
+      gap: 16px;
+    }
+    .output {
+      white-space: pre-wrap;
+      line-height: 1.65;
+      font-size: 15px;
+      min-height: 160px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fffdf6;
+      padding: 14px;
+      overflow-x: auto;
+    }
+    .meta {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .paper-path {
+      font-family: Consolas, monospace;
+      font-size: 13px;
+      color: #374151;
+      background: #f8f1df;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+    .terminal-output {
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-size: 13px;
+      min-height: 220px;
+      max-height: 360px;
+      overflow: auto;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      background: #111827;
+      color: #d1fae5;
+      padding: 14px;
+      font-family: Consolas, "Cascadia Mono", monospace;
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    @media (max-width: 760px) {
+      .section-grid { grid-template-columns: 1fr; }
+    }
+    .section-card {
+      border: 1px solid var(--line);
+      background: #fffdf6;
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .section-card h4 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+    .section-card .row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .section-card .mini {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+      min-height: 34px;
+    }
+    .section-btn {
+      padding: 8px 10px;
+      font-size: 12px;
+      border-radius: 10px;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>公考学习机</h1>
+      <p>一键完成：刷新材料、生成学习方案、独立命制原创模拟题、回收 good / bad 反馈，并支持一键打包分享整个项目。</p>
+    </section>
+
+    <div class="layout">
+      <section class="panel">
+        <h2>控制台</h2>
+
+        <div class="field">
+          <label for="materialDir">材料目录</label>
+          <input id="materialDir" value="{{ default_material_dir }}" />
+          <div class="hint">默认已指向当前项目材料目录。</div>
+        </div>
+
+        <div class="field">
+          <label for="provider">模型来源</label>
+          <input id="provider" list="providerOptions" value="{{ default_provider }}" />
+          <datalist id="providerOptions">
+            <option value="ollama"></option>
+            <option value="openai"></option>
+            <option value="dashscope"></option>
+          </datalist>
+        </div>
+
+        <div class="field">
+          <label for="model">模型</label>
+          <input id="model" value="{{ default_model }}" />
+        </div>
+
+        <div class="field">
+          <label for="apiKey" id="apiKeyLabel">API Key（Ollama 可留空）</label>
+          <input id="apiKey" type="password" placeholder="ollama 模式可留空" />
+          <div class="hint" id="providerHint">默认走 Ollama；如果你已经在 Ollama 中登录，通常不需要在这里填写 Key。</div>
+        </div>
+
+        <div class="field">
+          <label for="focus">本轮重点（可选）</label>
+          <textarea id="focus" placeholder="例如：判断推理稳定提分 + 资料分析判型"></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="ghost" id="saveBtn">记住配置</button>
+          <button class="primary" id="runBtn">开始学习并生成原创模拟题</button>
+          <button class="ghost" id="shareBtn">一键打包分享</button>
+        </div>
+        <div class="actions" style="margin-top:10px;">
+          <button class="primary" id="runAllSectionsBtn">一键触发六模块任务</button>
+        </div>
+        <div class="field" style="margin-top:16px;">
+          <label>进化任务监控（60分/8小时）</label>
+          <div class="actions">
+            <input id="evoTarget" style="max-width:110px;" value="60" />
+            <input id="evoHours" style="max-width:110px;" value="8" />
+            <button class="primary" id="runEvolutionBtn">启动进化任务</button>
+            <button class="ghost" id="attachActiveJobBtn">连接正在运行任务</button>
+          </div>
+          <div class="hint">即使任务由 Automation 触发，这里也能接管并实时显示进度与日志。</div>
+          <div class="paper-path" id="evoJobInfo">未连接进化任务。</div>
+        </div>
+        <div class="section-grid" id="sectionGrid"></div>
+
+        <div class="field" style="margin-top:16px;">
+          <label>最近分享包</label>
+          <div class="paper-path" id="sharePath">尚未生成分享压缩包。</div>
+          <div class="hint" id="shareHint">点击“一键打包分享”后会自动下载，同时在 output/share_packages/ 留一份压缩包。</div>
+        </div>
+
+        <div class="field" style="margin-top:16px;">
+          <label for="feedbackNotes">反馈备注（可选）</label>
+          <textarea id="feedbackNotes" placeholder="例如：资料题判型很像真题，但第12题数量略简单"></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="good" id="goodBtn" disabled>好</button>
+          <button class="bad" id="badBtn" disabled>坏</button>
+        </div>
+
+        <div class="status" id="status">状态：待启动</div>
+        <div class="progress-shell">
+          <div class="progress-meta">
+            <span id="progressStage">等待任务</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stack">
+        <div class="panel">
+          <h3>学习方案</h3>
+          <div class="meta" id="learningMeta"></div>
+          <div class="output" id="learningOutput">点击“开始学习并生成原创模拟题”后显示本轮学习方案。</div>
+        </div>
+
+        <div class="panel">
+          <h3>模拟题</h3>
+          <div class="paper-path" id="paperPath">尚未生成模拟卷。</div>
+          <div class="meta" id="paperMeta"></div>
+          <div class="paper-path" id="partialMeta">已通过题目：0</div>
+          <div class="output" id="partialOutput">后台通过一题会实时追加一题预览。</div>
+          <div class="output" id="paperOutput">生成后的原创模拟卷会写入磁盘，并同时显示在这里。</div>
+        </div>
+
+        <div class="panel">
+          <h3>后台日志</h3>
+          <div class="terminal-output" id="jobLog">等待任务启动。</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const providerEl = document.getElementById('provider');
+    const modelEl = document.getElementById('model');
+    const apiKeyEl = document.getElementById('apiKey');
+    const materialDirEl = document.getElementById('materialDir');
+    const focusEl = document.getElementById('focus');
+    const feedbackNotesEl = document.getElementById('feedbackNotes');
+    const apiKeyLabelEl = document.getElementById('apiKeyLabel');
+    const providerHintEl = document.getElementById('providerHint');
+
+    const runBtn = document.getElementById('runBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const shareBtn = document.getElementById('shareBtn');
+    const runAllSectionsBtn = document.getElementById('runAllSectionsBtn');
+    const runEvolutionBtn = document.getElementById('runEvolutionBtn');
+    const attachActiveJobBtn = document.getElementById('attachActiveJobBtn');
+    const evoTargetEl = document.getElementById('evoTarget');
+    const evoHoursEl = document.getElementById('evoHours');
+    const evoJobInfoEl = document.getElementById('evoJobInfo');
+    const goodBtn = document.getElementById('goodBtn');
+    const badBtn = document.getElementById('badBtn');
+    const sectionGridEl = document.getElementById('sectionGrid');
+
+    const statusEl = document.getElementById('status');
+    const learningOutputEl = document.getElementById('learningOutput');
+    const paperOutputEl = document.getElementById('paperOutput');
+    const paperPathEl = document.getElementById('paperPath');
+    const sharePathEl = document.getElementById('sharePath');
+    const shareHintEl = document.getElementById('shareHint');
+    const learningMetaEl = document.getElementById('learningMeta');
+    const paperMetaEl = document.getElementById('paperMeta');
+    const partialMetaEl = document.getElementById('partialMeta');
+    const partialOutputEl = document.getElementById('partialOutput');
+    const progressStageEl = document.getElementById('progressStage');
+    const progressPercentEl = document.getElementById('progressPercent');
+    const progressFillEl = document.getElementById('progressFill');
+    const jobLogEl = document.getElementById('jobLog');
+
+    const STORE = {
+      provider: 'gongkao_provider',
+      model: 'gongkao_model',
+      apiKey: 'gongkao_api_key',
+      materialDir: 'gongkao_material_dir'
+    };
+
+    const PROVIDER_DEFAULT_MODELS = {
+      ollama: '{{ default_model }}',
+      openai: 'gpt-4.1-mini',
+      dashscope: 'qwen-plus'
+    };
+    const LEGACY_OLLAMA_MODELS = new Set([
+      'gpt-oss:120b-cloud',
+      'qwen3:235b',
+      'qwen3:235b-cloud',
+      'qwen3-vl:235b-cloud'
+    ]);
+
+    let lastPaperPath = '';
+    let activeJobId = '';
+    let jobPollTimer = null;
+    let monitorJobId = '';
+    let monitorPollTimer = null;
+    const sectionJobs = {};
+    const SECTION_TASKS = [
+      '政治理论',
+      '常识判断',
+      '言语理解与表达',
+      '数量关系',
+      '判断推理',
+      '资料分析'
+    ];
+
+    function setStatus(text) {
+      statusEl.textContent = `状态：${text}`;
+    }
+
+    function setBusy(isBusy) {
+      runBtn.disabled = isBusy;
+      saveBtn.disabled = isBusy;
+      shareBtn.disabled = isBusy;
+      runAllSectionsBtn.disabled = isBusy;
+      providerEl.disabled = isBusy;
+      modelEl.disabled = isBusy;
+      apiKeyEl.disabled = isBusy;
+      materialDirEl.disabled = isBusy;
+      focusEl.disabled = isBusy;
+      runEvolutionBtn.disabled = isBusy;
+      attachActiveJobBtn.disabled = isBusy;
+    }
+
+    function setProgress(progress, stageText) {
+      const safeProgress = Math.max(0, Math.min(100, Number(progress) || 0));
+      progressFillEl.style.width = `${safeProgress}%`;
+      progressPercentEl.textContent = `${Math.round(safeProgress)}%`;
+      progressStageEl.textContent = stageText || '等待任务';
+    }
+
+    function stageLabel(stage, state) {
+      if (state === 'queued') return '任务已排队';
+      if (state === 'failed') return '任务失败';
+      if (state === 'succeeded') return '任务完成';
+      const labels = {
+        preparing: '准备任务',
+        refreshing_materials: '刷新材料',
+        crawling_web: '联网抓料',
+        building_learning_plan: '生成学习方案',
+        generating_paper: '生成模拟卷',
+        waiting_model_quota: '模型额度等待重试',
+        finalizing: '写入结果',
+        done: '任务完成'
+      };
+      return labels[stage] || stage || '任务进行中';
+    }
+
+    function sectionCardId(name) {
+      return `sec-${name.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '')}`;
+    }
+
+    function renderSectionCards() {
+      sectionGridEl.innerHTML = SECTION_TASKS.map(name => {
+        const id = sectionCardId(name);
+        return `
+          <div class="section-card" id="${id}">
+            <h4>${name}</h4>
+            <div class="row">
+              <button class="ghost section-btn" data-section="${name}">单独触发</button>
+              <span id="${id}-state" class="hint">未启动</span>
+            </div>
+            <div id="${id}-meta" class="mini">等待任务</div>
+          </div>
+        `;
+      }).join('');
+      sectionGridEl.querySelectorAll('button[data-section]').forEach(btn => {
+        btn.addEventListener('click', () => runSectionSession(btn.dataset.section));
+      });
+    }
+
+    function setSectionState(section, state, meta = '') {
+      const id = sectionCardId(section);
+      const stateEl = document.getElementById(`${id}-state`);
+      const metaEl = document.getElementById(`${id}-meta`);
+      if (stateEl) stateEl.textContent = state;
+      if (metaEl) metaEl.textContent = meta || '';
+    }
+
+    async function pollSectionJob(section, jobId) {
+      try {
+        const resp = await fetch(`/api/run-session/${jobId}`);
+        const job = await resp.json();
+        if (!resp.ok) throw new Error(job.message || '任务状态查询失败');
+        const label = stageLabel(job.stage, job.state);
+        setSectionState(section, label, `progress=${Math.round(job.progress || 0)}%`);
+        if (job.state === 'succeeded') {
+          sectionJobs[section] = null;
+          const qCount = job?.result?.question_count ?? 0;
+          setSectionState(section, '完成', `题量=${qCount} | ${job?.result?.generated_at || ''}`);
+          return;
+        }
+        if (job.state === 'failed') {
+          sectionJobs[section] = null;
+          setSectionState(section, '失败', job.error || '未知错误');
+          return;
+        }
+        setTimeout(() => pollSectionJob(section, jobId), 1200);
+      } catch (e) {
+        sectionJobs[section] = null;
+        setSectionState(section, '失败', e.message || String(e));
+      }
+    }
+
+    async function runSectionSession(section) {
+      const provider = providerEl.value.trim().toLowerCase();
+      const apiKey = apiKeyEl.value.trim();
+      if ((provider === 'openai' || provider === 'dashscope') && !apiKey) {
+        alert('当前 provider 需要 API Key');
+        return;
+      }
+      saveState();
+      setSectionState(section, '提交中', '正在创建后台任务...');
+      const resp = await fetch('/api/run-session-section', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider,
+          apiKey,
+          model: modelEl.value.trim(),
+          focus: focusEl.value.trim(),
+          materialDir: materialDirEl.value.trim(),
+          section
+        })
+      });
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) {
+        setSectionState(section, '失败', data.message || '未知错误');
+        return;
+      }
+      sectionJobs[section] = data.job_id;
+      setSectionState(section, '已排队', `job=${data.job_id}`);
+      pollSectionJob(section, data.job_id);
+    }
+
+    async function runAllSections() {
+      for (const section of SECTION_TASKS) {
+        runSectionSession(section);
+      }
+    }
+
+    function stopJobPolling() {
+      if (jobPollTimer) {
+        clearTimeout(jobPollTimer);
+        jobPollTimer = null;
+      }
+    }
+
+    function stopMonitorPolling() {
+      if (monitorPollTimer) {
+        clearTimeout(monitorPollTimer);
+        monitorPollTimer = null;
+      }
+    }
+
+    function stageLabelWithMode(stage, state) {
+      if (stage && String(stage).startsWith('evolving')) {
+        if (state === 'succeeded') return '进化任务已达标';
+        if (state === 'failed') return '进化任务结束';
+        return '进化任务进行中';
+      }
+      return stageLabel(stage, state);
+    }
+
+    function renderEvoInfo(text) {
+      evoJobInfoEl.textContent = text || '未连接进化任务。';
+    }
+
+    async function pollMonitorJob(jobId) {
+      try {
+        const resp = await fetch(`/api/run-session/${jobId}`);
+        const job = await resp.json();
+        if (!resp.ok) throw new Error(job.message || '任务状态查询失败');
+        const label = stageLabelWithMode(job.stage, job.state);
+        setProgress(job.progress, label);
+        renderLogs(job.logs);
+        renderEvoInfo(`job=${job.job_id} | state=${job.state} | stage=${job.stage} | progress=${Math.round(job.progress || 0)}%`);
+        setStatus(`${label} | ${job.updated_at || ''}`.trim());
+
+        if (job.state === 'succeeded' || job.state === 'failed') {
+          stopMonitorPolling();
+          return;
+        }
+        monitorPollTimer = setTimeout(() => pollMonitorJob(jobId), 1200);
+      } catch (error) {
+        stopMonitorPolling();
+        renderEvoInfo(`监控失败：${error.message || error}`);
+      }
+    }
+
+    async function attachLatestActiveJob() {
+      try {
+        const resp = await fetch('/api/jobs?limit=60');
+        const data = await resp.json();
+        if (!resp.ok || !data.ok) {
+          throw new Error(data.message || '读取任务列表失败');
+        }
+        const active = (data.active_jobs || [])[0];
+        if (!active || !active.job_id) {
+          renderEvoInfo('当前没有 running/queued 任务。');
+          return;
+        }
+        monitorJobId = active.job_id;
+        stopMonitorPolling();
+        renderEvoInfo(`已连接 job=${monitorJobId}`);
+        pollMonitorJob(monitorJobId);
+      } catch (error) {
+        renderEvoInfo(`连接失败：${error.message || error}`);
+      }
+    }
+
+    function renderLogs(lines) {
+      const content = Array.isArray(lines) && lines.length ? lines.join('\n') : '等待任务启动。';
+      jobLogEl.textContent = content;
+      jobLogEl.scrollTop = jobLogEl.scrollHeight;
+    }
+
+    function renderJobResult(result) {
+      if (!result) return;
+      lastPaperPath = result.paper_path || '';
+      if (lastPaperPath) {
+        paperPathEl.textContent = lastPaperPath;
+        goodBtn.disabled = false;
+        badBtn.disabled = false;
+      }
+      learningMetaEl.textContent = `provider=${result.provider} | model=${result.model} | material=${result.material_dir}`;
+      paperMetaEl.textContent = result.validation_output || `题量=${result.question_count || 0}`;
+      learningOutputEl.textContent = result.learning_content || '未返回学习方案。';
+      paperOutputEl.textContent = result.paper_content || '未返回模拟题内容。';
+      renderPartialQuestions(result);
+    }
+
+    function renderPartialQuestions(result) {
+      const partial = Array.isArray(result?.partial_questions) ? result.partial_questions : [];
+      partialMetaEl.textContent = `已通过题目：${partial.length}`;
+      if (!partial.length) {
+        partialOutputEl.textContent = '后台通过一题会实时追加一题预览。';
+        return;
+      }
+      const lines = partial.slice(-40).map(item => {
+        const no = item?.number || '?';
+        const sec = item?.section || '未分区';
+        const prev = item?.preview || '';
+        return `${no}. [${sec}] ${prev}`;
+      });
+      partialOutputEl.textContent = lines.join('\n');
+    }
+
+    async function pollJob(jobId) {
+      try {
+        const resp = await fetch(`/api/run-session/${jobId}`);
+        const job = await resp.json();
+        if (!resp.ok) {
+          throw new Error(job.message || '任务状态查询失败');
+        }
+
+        const label = stageLabel(job.stage, job.state);
+        setProgress(job.progress, label);
+        renderLogs(job.logs);
+        renderPartialQuestions(job.result || {});
+        setStatus(`${label} | ${job.updated_at || ''}`.trim());
+
+        if (job.state === 'succeeded') {
+          stopJobPolling();
+          setBusy(false);
+          renderJobResult(job.result);
+          setStatus(`完成 ${job.result?.generated_at || ''} | 题量 ${job.result?.question_count || 0}`);
+          return;
+        }
+
+        if (job.state === 'failed') {
+          stopJobPolling();
+          setBusy(false);
+          learningOutputEl.textContent = job.error || '任务失败';
+          paperOutputEl.textContent = '本轮未生成可交付模拟卷。';
+          paperMetaEl.textContent = '';
+          setStatus(`失败：${job.error || '未知错误'}`);
+          return;
+        }
+
+        jobPollTimer = setTimeout(() => pollJob(jobId), 1000);
+      } catch (error) {
+        stopJobPolling();
+        setBusy(false);
+        setStatus(`任务状态查询失败：${error.message || error}`);
+      }
+    }
+
+    function syncProviderUi() {
+      const provider = providerEl.value.trim().toLowerCase() || 'ollama';
+      if (provider === 'ollama') {
+        apiKeyLabelEl.textContent = 'API Key（Ollama 可留空）';
+        providerHintEl.textContent = '默认走 Ollama；如果你已经在 Ollama 中登录，通常不需要在这里填写 Key。';
+        apiKeyEl.placeholder = 'ollama 模式可留空';
+      } else if (provider === 'dashscope') {
+        apiKeyLabelEl.textContent = 'DashScope API Key';
+        providerHintEl.textContent = '走千问兼容接口，需要 DashScope Key。';
+        apiKeyEl.placeholder = '输入 DashScope API Key';
+      } else {
+        apiKeyLabelEl.textContent = 'OpenAI API Key';
+        providerHintEl.textContent = '走 OpenAI 云端接口。';
+        apiKeyEl.placeholder = 'sk-...';
+      }
+      if (!modelEl.value || Object.values(PROVIDER_DEFAULT_MODELS).includes(modelEl.value)) {
+        modelEl.value = PROVIDER_DEFAULT_MODELS[provider] || '{{ default_model }}';
+      }
+    }
+
+    function loadSavedState() {
+      const provider = localStorage.getItem(STORE.provider);
+      const model = localStorage.getItem(STORE.model);
+      const apiKey = localStorage.getItem(STORE.apiKey);
+      const materialDir = localStorage.getItem(STORE.materialDir);
+      if (provider) providerEl.value = provider;
+      if (model) {
+        const currentProvider = (provider || providerEl.value || 'ollama').trim().toLowerCase();
+        if (currentProvider === 'ollama' && LEGACY_OLLAMA_MODELS.has(model.trim())) {
+          modelEl.value = PROVIDER_DEFAULT_MODELS.ollama;
+          localStorage.setItem(STORE.model, PROVIDER_DEFAULT_MODELS.ollama);
+        } else {
+          modelEl.value = model;
+        }
+      }
+      if (apiKey) apiKeyEl.value = apiKey;
+      if (materialDir) materialDirEl.value = materialDir;
+      syncProviderUi();
+    }
+
+    function saveState() {
+      localStorage.setItem(STORE.provider, providerEl.value.trim());
+      localStorage.setItem(STORE.model, modelEl.value.trim());
+      localStorage.setItem(STORE.materialDir, materialDirEl.value.trim());
+      if (apiKeyEl.value.trim()) {
+        localStorage.setItem(STORE.apiKey, apiKeyEl.value.trim());
+      }
+      setStatus('配置已保存到本机浏览器');
+    }
+
+    async function loadStatus() {
+      try {
+        const resp = await fetch('/api/status');
+        const data = await resp.json();
+        if (data.last_generated_paper) {
+          lastPaperPath = data.last_generated_paper;
+          paperPathEl.textContent = data.last_generated_paper;
+          goodBtn.disabled = false;
+          badBtn.disabled = false;
+        }
+        if (data.last_share_archive) {
+          sharePathEl.textContent = data.last_share_archive;
+        }
+        setStatus(`规则 ${data.rulebook_version} | 反馈 ${data.feedback_entries}（good ${data.good}/bad ${data.bad}）`);
+      } catch {
+        setStatus('无法获取状态');
+      }
+    }
+
+    async function runSession() {
+      const provider = providerEl.value.trim().toLowerCase();
+      const apiKey = apiKeyEl.value.trim();
+      if ((provider === 'openai' || provider === 'dashscope') && !apiKey) {
+        alert('当前 provider 需要 API Key');
+        return;
+      }
+
+      saveState();
+      stopJobPolling();
+      activeJobId = '';
+      setBusy(true);
+      setStatus('正在创建后台任务...');
+      setProgress(0, '任务已提交');
+      renderLogs(['等待后台任务启动...']);
+      learningOutputEl.textContent = '学习方案生成中...';
+      paperOutputEl.textContent = '模拟卷生成中...';
+      paperPathEl.textContent = '正在生成模拟卷...';
+      learningMetaEl.textContent = '';
+      paperMetaEl.textContent = '';
+      goodBtn.disabled = true;
+      badBtn.disabled = true;
+
+      const resp = await fetch('/api/run-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider,
+          apiKey,
+          model: modelEl.value.trim(),
+          focus: focusEl.value.trim(),
+          materialDir: materialDirEl.value.trim()
+        })
+      });
+
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) {
+        setBusy(false);
+        setStatus('运行失败');
+        learningOutputEl.textContent = data.message || '未知错误';
+        paperOutputEl.textContent = '未生成模拟卷。';
+        paperPathEl.textContent = '未生成模拟卷。';
+        paperMetaEl.textContent = '';
+        return;
+      }
+      activeJobId = data.job_id || '';
+      setStatus(`后台任务已创建：${activeJobId}`);
+      setProgress(0, '任务已排队');
+      await pollJob(activeJobId);
+    }
+
+    async function runEvolutionSession() {
+      const provider = providerEl.value.trim().toLowerCase();
+      const apiKey = apiKeyEl.value.trim();
+      if ((provider === 'openai' || provider === 'dashscope') && !apiKey) {
+        alert('当前 provider 需要 API Key');
+        return;
+      }
+      const target = Math.max(0, Math.min(100, Number(evoTargetEl.value || 60)));
+      const hours = Math.max(0.1, Math.min(8, Number(evoHoursEl.value || 8)));
+      saveState();
+      renderEvoInfo('正在创建进化任务...');
+      const resp = await fetch('/api/run-evolution', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          provider,
+          apiKey,
+          genModel: modelEl.value.trim(),
+          reviewModel: 'gpt-oss:120b-cloud',
+          targetScore: target,
+          maxHours: hours,
+          focus: focusEl.value.trim(),
+          materialDir: materialDirEl.value.trim()
+        })
+      });
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) {
+        renderEvoInfo(`启动失败：${data.message || '未知错误'}`);
+        return;
+      }
+      monitorJobId = data.job_id;
+      stopMonitorPolling();
+      renderEvoInfo(`已启动进化任务 job=${monitorJobId}`);
+      pollMonitorJob(monitorJobId);
+    }
+
+    async function packageProject() {
+      setStatus('正在打包分享包...');
+      shareHintEl.textContent = '正在生成分享压缩包。';
+      const resp = await fetch('/api/package-project', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) {
+        setStatus('打包失败');
+        shareHintEl.textContent = data.message || '打包失败';
+        return;
+      }
+      sharePathEl.textContent = data.archive_path;
+      shareHintEl.textContent = `已打包 ${data.file_count} 个文件 | ${data.generated_at}`;
+      setStatus('分享包已生成，正在自动下载');
+      window.location.href = data.download_url;
+    }
+
+    async function sendFeedback(label) {
+      if (!lastPaperPath) {
+        alert('当前没有可反馈的模拟卷');
+        return;
+      }
+
+      setStatus(`正在记录 ${label} 反馈...`);
+      const resp = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          label,
+          notes: feedbackNotesEl.value.trim(),
+          paperPath: lastPaperPath
+        })
+      });
+      const data = await resp.json();
+      if (!resp.ok || !data.ok) {
+        setStatus('反馈失败');
+        learningOutputEl.textContent = data.message || '反馈失败';
+        return;
+      }
+      setStatus(`反馈已记录 | good=${data.good} bad=${data.bad}`);
+      await loadStatus();
+    }
+
+    providerEl.addEventListener('change', syncProviderUi);
+    saveBtn.addEventListener('click', saveState);
+    runBtn.addEventListener('click', runSession);
+    shareBtn.addEventListener('click', packageProject);
+    runAllSectionsBtn.addEventListener('click', runAllSections);
+    runEvolutionBtn.addEventListener('click', runEvolutionSession);
+    attachActiveJobBtn.addEventListener('click', attachLatestActiveJob);
+    goodBtn.addEventListener('click', () => sendFeedback('good'));
+    badBtn.addEventListener('click', () => sendFeedback('bad'));
+
+    loadSavedState();
+    renderSectionCards();
+    loadStatus();
+    attachLatestActiveJob();
+  </script>
+</body>
+</html>
