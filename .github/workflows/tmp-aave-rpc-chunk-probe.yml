@@ -1,0 +1,94 @@
+name: Temporary Aave Chunked Log Probe
+
+on:
+  push:
+    branches: [tmp-alpha-data-bridge-20260801]
+    paths: [.github/workflows/tmp-aave-rpc-chunk-probe.yml]
+  pull_request:
+    branches: [main]
+    paths: [.github/workflows/tmp-aave-rpc-chunk-probe.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp-alpha-data-bridge-20260801
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install --disable-pip-version-check requests eth-utils 'eth-hash[pycryptodome]'
+      - name: Scan identical historical windows in provider-sized chunks
+        run: |
+          mkdir -p tmp-aave-rpc-chunk-results
+          cat > /tmp/chunk.py <<'PY'
+          import json,time
+          from pathlib import Path
+          import requests
+          from eth_utils import keccak
+          endpoints={
+            'one_rpc':('https://1rpc.io/eth',50),
+            'cloudflare':('https://cloudflare-eth.com',800),
+            'blockpi':('https://ethereum.blockpi.network/v1/rpc/public',1000),
+            'blast':('https://eth-mainnet.public.blastapi.io',1000),
+            'drpc':('https://eth.drpc.org',1000),
+            'payload':('https://rpc.payload.de',1000),
+            'meow':('https://eth.meowrpc.com',1000),
+          }
+          pools={
+            'v2':{'address':'0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9','a':12000000,'b':12004999,
+              'events':{'Borrow':'Borrow(address,address,address,uint256,uint256,uint256,uint16)','Repay':'Repay(address,address,address,uint256)','LiquidationCall':'LiquidationCall(address,address,address,uint256,uint256,address,bool)'}},
+            'v3':{'address':'0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2','a':17000000,'b':17004999,
+              'events':{'Borrow':'Borrow(address,address,address,uint256,uint8,uint256,uint16)','Repay':'Repay(address,address,address,uint256,bool)','LiquidationCall':'LiquidationCall(address,address,address,uint256,uint256,address,bool)'}},
+          }
+          def rpc(url,m,p,timeout=30):
+            for k in range(3):
+              try:
+                r=requests.post(url,json={'jsonrpc':'2.0','id':1,'method':m,'params':p},timeout=timeout)
+                try:x=r.json()
+                except Exception:return {'http':r.status_code,'raw':r.text[:300]}
+                return {'http':r.status_code,**x}
+              except Exception as e:
+                if k==2:return {'exception':repr(e)}
+                time.sleep(k+1)
+          allout={}
+          for n,(url,chunk) in endpoints.items():
+            R={'url':url,'configured_chunk':chunk,'latest':rpc(url,'eth_blockNumber',[]),'pools':{}}
+            for pv,p in pools.items():
+              Q={'range':[p['a'],p['b']],'events':{}}
+              for en,sig in p['events'].items():
+                topic='0x'+keccak(text=sig).hex();logs=[];errors=[];requests_n=0
+                for a in range(p['a'],p['b']+1,chunk):
+                  b=min(p['b'],a+chunk-1);requests_n+=1
+                  f={'address':p['address'],'fromBlock':hex(a),'toBlock':hex(b),'topics':[topic]}
+                  z=rpc(url,'eth_getLogs',[f],45);x=z.get('result') if isinstance(z,dict) else None
+                  if isinstance(x,list):logs.extend(x)
+                  else:errors.append({'a':a,'b':b,'response':z})
+                Q['events'][en]={'signature':sig,'topic0':topic,'requests':requests_n,'count':len(logs),'error_count':len(errors),'errors':errors[:3],'first_log':logs[0] if logs else None,'last_log':logs[-1] if logs else None}
+              R['pools'][pv]=Q
+            allout[n]=R;Path(f'tmp-aave-rpc-chunk-results/{n}.json').write_text(json.dumps(R,indent=2))
+          usable=[]
+          for n,R in allout.items():
+            ok=all(all(e['error_count']==0 for e in R['pools'][pv]['events'].values()) for pv in pools)
+            if ok:usable.append(n)
+          agreement={}
+          for pv in pools:
+            agreement[pv]={en:{n:allout[n]['pools'][pv]['events'][en]['count'] for n in allout} for en in pools[pv]['events']}
+          summary={'usable':usable,'two_endpoint_gate':len(usable)>=2,'agreement':agreement}
+          Path('tmp-aave-rpc-chunk-results/summary.json').write_text(json.dumps(summary,indent=2));print(json.dumps(summary,indent=2))
+          PY
+          python /tmp/chunk.py
+      - name: Commit probe results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin tmp-alpha-data-bridge-20260801
+          git reset --hard origin/tmp-alpha-data-bridge-20260801
+          git add tmp-aave-rpc-chunk-results
+          git commit -m 'chore: Aave chunked log probe result' || exit 0
+          git push origin HEAD:tmp-alpha-data-bridge-20260801
