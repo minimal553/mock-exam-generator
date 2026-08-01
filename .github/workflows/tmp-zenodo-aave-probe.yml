@@ -1,0 +1,50 @@
+name: Temporary Zenodo Aave Dataset Probe
+
+on:
+  push:
+    branches: [tmp-alpha-data-bridge-20260801]
+    paths: [.github/workflows/tmp-zenodo-aave-probe.yml]
+  pull_request:
+    branches: [main]
+    paths: [.github/workflows/tmp-zenodo-aave-probe.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp-alpha-data-bridge-20260801
+          fetch-depth: 0
+      - name: Fetch Zenodo record metadata
+        run: |
+          mkdir -p tmp-zenodo-aave-results
+          curl -L --fail --retry 4 https://zenodo.org/api/records/17898640 -o tmp-zenodo-aave-results/record.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('tmp-zenodo-aave-results/record.json').read_text())
+          fs=[]
+          for f in x.get('files',[]):
+            fs.append({'key':f.get('key'),'size':f.get('size'),'checksum':f.get('checksum'),'content':f.get('links',{}).get('content')})
+          fs=sorted(fs,key=lambda z:z['key'] or '')
+          Path('tmp-zenodo-aave-results/files.json').write_text(json.dumps(fs,indent=2))
+          selected=[f for f in fs if 'ethereum' in (f['key'] or '').lower() and any(e in (f['key'] or '') for e in ['Borrow','Repay','LiquidationCall'])]
+          summary={'title':x.get('metadata',{}).get('title'),'doi':x.get('pids',{}).get('doi',{}).get('identifier'),
+            'file_count':len(fs),'total_bytes':sum(int(f['size'] or 0) for f in fs),'selected_count':len(selected),
+            'selected_bytes':sum(int(f['size'] or 0) for f in selected),'selected':selected}
+          Path('tmp-zenodo-aave-results/summary.json').write_text(json.dumps(summary,indent=2));print(json.dumps(summary,indent=2))
+          PY
+      - name: Commit metadata
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin tmp-alpha-data-bridge-20260801
+          git reset --hard origin/tmp-alpha-data-bridge-20260801
+          git add tmp-zenodo-aave-results
+          git commit -m 'chore: Zenodo Aave dataset metadata' || exit 0
+          git push origin HEAD:tmp-alpha-data-bridge-20260801
