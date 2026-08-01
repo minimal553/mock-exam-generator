@@ -1,0 +1,78 @@
+name: Temporary SQD Aave Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - sqd_mq_analysis.py
+      - sqd_mq_fast_runner.py
+      - sqd_mq_fast_runner_v2.py
+      - sqd_chain_worker.py
+      - sqd_combine_results.py
+      - .github/workflows/tmp-sqd-aave.yml
+
+permissions:
+  contents: write
+
+jobs:
+  extract-chain:
+    strategy:
+      fail-fast: false
+      matrix:
+        chain: [arbitrum, optimism, polygon, avalanche]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp-alpha-sqd-20260801
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install --disable-pip-version-check requests pandas numpy scipy pyarrow eth-utils 'eth-hash[pycryptodome]'
+      - name: Extract and stream-decode chain
+        run: python sqd_chain_worker.py --chain ${{ matrix.chain }} --out chain-result
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bclx-${{ matrix.chain }}
+          path: |
+            chain-result/borrow_cohort.parquet
+            chain-result/asset_map.csv
+            chain-result/chain_summary.json
+          if-no-files-found: error
+          retention-days: 1
+
+  combine:
+    needs: extract-chain
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp-alpha-sqd-20260801
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install --disable-pip-version-check pandas numpy scipy pyarrow eth-utils 'eth-hash[pycryptodome]'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: bclx-*
+          path: chain-artifacts
+      - name: Run frozen cross-chain matching and verdict
+        run: python sqd_combine_results.py --input chain-artifacts --out sqd-mq-matrix-results
+      - name: Commit compact results to isolated branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add sqd-mq-matrix-results/summary.json
+          git add sqd-mq-matrix-results/REPORT.md
+          git add sqd-mq-matrix-results/extraction_summary.json
+          git add sqd-mq-matrix-results/asset_map.csv
+          git add sqd-mq-matrix-results/matched_delever90.csv
+          git commit -m 'chore: four-chain frozen BCLX results [alpha-result]' || exit 0
+          git pull --rebase origin tmp-alpha-sqd-20260801
+          git push origin HEAD:tmp-alpha-sqd-20260801
