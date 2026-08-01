@@ -1,0 +1,3 @@
+url=https://gateway.thegraph.com/api/subgraphs/id/Cd2gEDVeqnjBn1hSeqFMitw8Q1iiyV9FYUZkLNRcL87g
+http_code=200
+{"errors":[{"message":"auth error: missing authorization header"}]}

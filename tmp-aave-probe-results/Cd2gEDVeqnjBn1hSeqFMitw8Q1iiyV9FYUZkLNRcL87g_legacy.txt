@@ -1,0 +1,3 @@
+url=https://api.thegraph.com/subgraphs/id/Cd2gEDVeqnjBn1hSeqFMitw8Q1iiyV9FYUZkLNRcL87g
+http_code=200
+{"errors":[{"message":"deployment `Cd2gEDVeqnjBn1hSeqFMitw8Q1iiyV9FYUZkLNRcL87g` does not exist"}]}

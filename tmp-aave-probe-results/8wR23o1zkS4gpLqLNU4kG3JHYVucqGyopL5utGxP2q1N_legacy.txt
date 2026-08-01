@@ -1,0 +1,3 @@
+url=https://api.thegraph.com/subgraphs/id/8wR23o1zkS4gpLqLNU4kG3JHYVucqGyopL5utGxP2q1N
+http_code=200
+{"errors":[{"message":"deployment `8wR23o1zkS4gpLqLNU4kG3JHYVucqGyopL5utGxP2q1N` does not exist"}]}
