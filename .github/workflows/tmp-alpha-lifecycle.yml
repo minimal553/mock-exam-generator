@@ -1,0 +1,50 @@
+name: Temporary Alpha Lifecycle Validation
+
+on:
+  push:
+    branches:
+      - tmp-alpha-data-bridge-20260801
+    paths:
+      - tmp-alpha-lifecycle.py
+      - .github/workflows/tmp-alpha-lifecycle.yml
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp-alpha-data-bridge-20260801
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install --disable-pip-version-check duckdb pandas numpy
+
+      - name: Download dynamic historical database
+        run: |
+          curl -L --fail --retry 5 --retry-delay 5 \
+            https://github.com/terrylica/binance-futures-availability/releases/download/latest/availability.duckdb.gz \
+            -o availability.duckdb.gz
+          gunzip -f availability.duckdb.gz
+          ls -lh availability.duckdb
+
+      - name: Run frozen validation
+        run: |
+          rm -rf tmp-alpha-results
+          python tmp-alpha-lifecycle.py --db availability.duckdb --out tmp-alpha-results
+
+      - name: Commit compact results to temporary branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tmp-alpha-results
+          git commit -m 'chore: alpha lifecycle validation results [alpha-result]' || exit 0
+          git push origin HEAD:tmp-alpha-data-bridge-20260801
