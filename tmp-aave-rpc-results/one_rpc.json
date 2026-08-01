@@ -3,10 +3,10 @@
   "block_number_response": {
     "http": 200,
     "jsonrpc": "2.0",
-    "id": 1,
-    "result": "0x1878119"
+    "result": "0x1878123",
+    "id": 1
   },
-  "latest": 25657625,
+  "latest": 25657635,
   "pools": {
     "v2": {
       "address": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
@@ -127,8 +127,13 @@
       },
       "historical_code_exists": false,
       "historical_code_response": {
-        "http": 504,
-        "raw": "<!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!--<![endif]-->\n<head>\n\n<title>1rpc.io | 504: Gateway time-out</title>\n<meta charset=\"UTF-8\" />\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n<meta http-equiv=\"X-UA-Compatible\" "
+        "http": 429,
+        "jsonrpc": "2.0",
+        "id": null,
+        "error": {
+          "code": -32005,
+          "message": "Rate limit exceeded on Nodies public endpoints. For higher limits, create a free account at https://nodies.app and use a private endpoint. Enterprise: sales@nodies.org"
+        }
       }
     }
   }
