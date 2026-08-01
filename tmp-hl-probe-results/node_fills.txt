@@ -1,0 +1,4 @@
+=== node_fills ===
+
+aws: [ERROR]: An error occurred (AccessDenied) when calling the ListObjectsV2 operation: Anonymous users cannot invoke requests against Requester Pays buckets. Please authenticate.
+exit_code=254
