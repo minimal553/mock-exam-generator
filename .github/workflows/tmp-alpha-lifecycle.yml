@@ -5,15 +5,13 @@ on:
     branches:
       - tmp-alpha-data-bridge-20260801
     paths:
-      - tmp-alpha-lifecycle.py
-      - tmp_alpha_runner.py
+      - tmp_alpha_family_search.py
       - .github/workflows/tmp-alpha-lifecycle.yml
   pull_request:
     branches:
       - main
     paths:
-      - tmp-alpha-lifecycle.py
-      - tmp_alpha_runner.py
+      - tmp_alpha_family_search.py
       - .github/workflows/tmp-alpha-lifecycle.yml
 
 permissions:
@@ -44,15 +42,15 @@ jobs:
           gunzip -f availability.duckdb.gz
           ls -lh availability.duckdb
 
-      - name: Run frozen validation
+      - name: Run frozen mechanism-family search
         run: |
-          rm -rf tmp-alpha-results
-          python tmp_alpha_runner.py --db availability.duckdb --out tmp-alpha-results
+          rm -rf tmp-alpha-family-results
+          python tmp_alpha_family_search.py --db availability.duckdb --out tmp-alpha-family-results
 
       - name: Commit compact results to temporary branch
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add tmp-alpha-results
-          git commit -m 'chore: alpha lifecycle validation results [alpha-result]' || exit 0
+          git add tmp-alpha-family-results
+          git commit -m 'chore: lifecycle family search results [alpha-result]' || exit 0
           git push origin HEAD:tmp-alpha-data-bridge-20260801
