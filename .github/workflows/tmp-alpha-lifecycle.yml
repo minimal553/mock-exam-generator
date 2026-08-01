@@ -7,6 +7,12 @@ on:
     paths:
       - tmp-alpha-lifecycle.py
       - .github/workflows/tmp-alpha-lifecycle.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - tmp-alpha-lifecycle.py
+      - .github/workflows/tmp-alpha-lifecycle.yml
 
 permissions:
   contents: write
