@@ -1,0 +1,50 @@
+name: Temporary Hyperliquid Public Data Probe
+
+on:
+  push:
+    branches: [tmp-alpha-data-bridge-20260801]
+    paths:
+      - .github/workflows/tmp-hl-public-data-probe.yml
+      - tmp-hl-probe-trigger.txt
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/tmp-hl-public-data-probe.yml
+      - tmp-hl-probe-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp-alpha-data-bridge-20260801
+          fetch-depth: 0
+      - name: Probe official S3 prefixes
+        shell: bash
+        run: |
+          mkdir -p tmp-hl-probe-results
+          set +e
+          for prefix in node_fills_by_block node_fills node_trades explorer_blocks; do
+            echo "=== $prefix ===" | tee "tmp-hl-probe-results/${prefix}.txt"
+            aws s3api list-objects-v2 \
+              --bucket hl-mainnet-node-data \
+              --prefix "${prefix}/" \
+              --max-items 20 \
+              --no-sign-request \
+              --output json >> "tmp-hl-probe-results/${prefix}.txt" 2>&1
+            echo "exit_code=$?" >> "tmp-hl-probe-results/${prefix}.txt"
+          done
+          set -e
+      - name: Commit probe results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tmp-hl-probe-results
+          git commit -m 'chore: Hyperliquid public-data probe result' || exit 0
+          git pull --rebase origin tmp-alpha-data-bridge-20260801
+          git push origin HEAD:tmp-alpha-data-bridge-20260801
