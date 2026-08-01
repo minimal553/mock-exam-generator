@@ -1,0 +1,49 @@
+name: Temporary Aave Subgraph Probe
+
+on:
+  push:
+    branches: [tmp-alpha-data-bridge-20260801]
+    paths:
+      - .github/workflows/tmp-aave-subgraph-probe.yml
+      - tmp-aave-probe-trigger.txt
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/tmp-aave-subgraph-probe.yml
+      - tmp-aave-probe-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp-alpha-data-bridge-20260801
+          fetch-depth: 0
+      - name: Probe official Aave subgraphs
+        shell: bash
+        run: |
+          mkdir -p tmp-aave-probe-results
+          QUERY='{"query":"{ _meta { block { number } } userTransactions(first: 1, orderBy: timestamp, orderDirection: desc) { id timestamp action } }"}'
+          for id in Cd2gEDVeqnjBn1hSeqFMitw8Q1iiyV9FYUZkLNRcL87g 8wR23o1zkS4gpLqLNU4kG3JHYVucqGyopL5utGxP2q1N; do
+            for kind in gateway legacy; do
+              if [ "$kind" = gateway ]; then URL="https://gateway.thegraph.com/api/subgraphs/id/$id"; else URL="https://api.thegraph.com/subgraphs/id/$id"; fi
+              out="tmp-aave-probe-results/${id}_${kind}.txt"
+              code=$(curl -sS --max-time 30 -o /tmp/body -w '%{http_code}' -H 'content-type: application/json' --data "$QUERY" "$URL" || true)
+              echo "url=$URL" > "$out"
+              echo "http_code=$code" >> "$out"
+              head -c 4000 /tmp/body >> "$out" || true
+            done
+          done
+      - name: Commit probe results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tmp-aave-probe-results
+          git commit -m 'chore: Aave subgraph probe result' || exit 0
+          git pull --rebase origin tmp-alpha-data-bridge-20260801
+          git push origin HEAD:tmp-alpha-data-bridge-20260801
