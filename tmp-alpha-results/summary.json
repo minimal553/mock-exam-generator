@@ -1,0 +1,336 @@
+{
+  "research_contract": {
+    "signal": "age 90-180d; 72h decisions; long max 30d return; short min 30d return",
+    "liquidity_gate": "30d median quote volume >= 1000000.0",
+    "development": "2020-01-01 to 2022-12-31",
+    "oos": "2023-01-01 to 2025-12-31",
+    "execution": {
+      "entry": "next UTC daily open",
+      "exit": "three days later UTC daily open",
+      "per_side_cost": 0.002,
+      "funding_reserve_per_leg_day": 0.0005,
+      "mdd": "daily close plus conservative same-day long-low/short-high stress"
+    }
+  },
+  "data": {
+    "rows": 103186,
+    "symbols": 578,
+    "first_date": "2020-01-01",
+    "last_date": "2025-12-31",
+    "trades_generated": 686,
+    "skip_reasons": {
+      "age_universe_lt2": 43,
+      "entry_exit_missing": 1
+    }
+  },
+  "specs": [
+    {
+      "name": "base",
+      "use_dispersion_gate": false,
+      "selected_leverage_from_2020_2022": 0.25,
+      "development": {
+        "terminal_factor": 0.7309104434618219,
+        "total_return": -0.2690895565381781,
+        "cagr": -0.09919302550180753,
+        "mdd_close": 0.6881170954205837,
+        "mdd_stress": 0.6924544559603674,
+        "trade_count": 320,
+        "yearly": {
+          "2020": {
+            "factor": 1.5103896822263736,
+            "mdd_stress": 0.13372147620330388,
+            "trades": 83
+          },
+          "2021": {
+            "factor": 0.9214489364562114,
+            "mdd_stress": 0.5819585764133606,
+            "trades": 122
+          },
+          "2022": {
+            "factor": 0.5251748063036581,
+            "mdd_stress": 0.5894248032122151,
+            "trades": 115
+          }
+        }
+      },
+      "oos_2023_2025": {
+        "terminal_factor": 0.6180230426974375,
+        "total_return": -0.38197695730256254,
+        "cagr": -0.14817421911944284,
+        "mdd_close": 0.658564200994775,
+        "mdd_stress": 0.7197836779652023,
+        "trade_count": 365,
+        "yearly": {
+          "2023": {
+            "factor": 0.7605715781135667,
+            "mdd_stress": 0.46203718784068315,
+            "trades": 122
+          },
+          "2024": {
+            "factor": 0.8453782068379241,
+            "mdd_stress": 0.4437771925480998,
+            "trades": 122
+          },
+          "2025": {
+            "factor": 0.9611994813616174,
+            "mdd_stress": 0.5540916331537351,
+            "trades": 121
+          }
+        }
+      },
+      "year_log_concentration": 1,
+      "robustness": {
+        "delete_top5_trades": {
+          "terminal_factor": 0.27637947554478565,
+          "total_return": -0.7236205244552143,
+          "cagr": -0.34855504160429807,
+          "mdd_close": 0.8473101477747373,
+          "mdd_stress": 0.8746874553656715,
+          "trade_count": 360,
+          "yearly": {
+            "2023": {
+              "factor": 0.7605715781135667,
+              "mdd_stress": 0.46203718784068315,
+              "trades": 122
+            },
+            "2024": {
+              "factor": 0.74915501135701,
+              "mdd_stress": 0.5070879515663391,
+              "trades": 121
+            },
+            "2025": {
+              "factor": 0.485058374658371,
+              "mdd_stress": 0.7358183524752913,
+              "trades": 117
+            }
+          }
+        },
+        "delete_top10_trades": {
+          "terminal_factor": 0.16561414111531603,
+          "total_return": -0.834385858884684,
+          "cagr": -0.45076460893838555,
+          "mdd_close": 0.8746617627855746,
+          "mdd_stress": 0.9049342256277588,
+          "trade_count": 355,
+          "yearly": {
+            "2023": {
+              "factor": 0.6263733679514711,
+              "mdd_stress": 0.49360703687830565,
+              "trades": 120
+            },
+            "2024": {
+              "factor": 0.6706971327265945,
+              "mdd_stress": 0.5070879515663396,
+              "trades": 120
+            },
+            "2025": {
+              "factor": 0.3942191187607161,
+              "mdd_stress": 0.7406044110701944,
+              "trades": 115
+            }
+          }
+        },
+        "delete_top5_symbols": {
+          "symbols": [
+            "BIDUSDT",
+            "DOLOUSDT",
+            "POPCATUSDT",
+            "PTBUSDT",
+            "SEIUSDT"
+          ],
+          "metrics": {
+            "terminal_factor": 0.24183259876243532,
+            "total_return": -0.7581674012375647,
+            "cagr": -0.37690850760616457,
+            "mdd_close": 0.8101520253862783,
+            "mdd_stress": 0.8161967301555386,
+            "trade_count": 318,
+            "yearly": {
+              "2023": {
+                "factor": 0.6811230890309773,
+                "mdd_stress": 0.43936791503322503,
+                "trades": 110
+              },
+              "2024": {
+                "factor": 0.6297045208994715,
+                "mdd_stress": 0.4589127816910219,
+                "trades": 109
+              },
+              "2025": {
+                "factor": 0.5638355166937618,
+                "mdd_stress": 0.4852330024304795,
+                "trades": 99
+              }
+            }
+          }
+        }
+      },
+      "gates": {
+        "three_year_terminal_ge_1331": false,
+        "stress_mdd_le_40pct": false,
+        "at_least_3_calendar_years": true,
+        "every_year_factor_ge_3": false,
+        "best_year_log_share_le_50pct": false,
+        "delete_top5_terminal_ge_512": false,
+        "delete_top10_terminal_gt_1": false,
+        "trade_count_ge_60": true
+      },
+      "passed": false
+    },
+    {
+      "name": "dispersion_gate",
+      "use_dispersion_gate": true,
+      "selected_leverage_from_2020_2022": 0.25,
+      "development": {
+        "terminal_factor": 1.5589375318903094,
+        "total_return": 0.5589375318903094,
+        "cagr": 0.1594754993991525,
+        "mdd_close": 0.3788116070688856,
+        "mdd_stress": 0.5334727437523229,
+        "trade_count": 142,
+        "yearly": {
+          "2020": {
+            "factor": 1.4692093807500215,
+            "mdd_stress": 0.07336614805138586,
+            "trades": 48
+          },
+          "2021": {
+            "factor": 1.231146115696126,
+            "mdd_stress": 0.28990742507428613,
+            "trades": 72
+          },
+          "2022": {
+            "factor": 0.8618574123924315,
+            "mdd_stress": 0.4500039081541066,
+            "trades": 22
+          }
+        }
+      },
+      "oos_2023_2025": {
+        "terminal_factor": 1.0823284715592432,
+        "total_return": 0.08232847155924317,
+        "cagr": 0.026716201555517127,
+        "mdd_close": 0.2866900888064049,
+        "mdd_stress": 0.30781880045252796,
+        "trade_count": 242,
+        "yearly": {
+          "2023": {
+            "factor": 0.9403136048172261,
+            "mdd_stress": 0.25789455938694006,
+            "trades": 75
+          },
+          "2024": {
+            "factor": 1.0427682654677757,
+            "mdd_stress": 0.29692455751098656,
+            "trades": 82
+          },
+          "2025": {
+            "factor": 1.1038207594939367,
+            "mdd_stress": 0.26311202705681724,
+            "trades": 85
+          }
+        }
+      },
+      "year_log_concentration": 0.7022607858805078,
+      "robustness": {
+        "delete_top5_trades": {
+          "terminal_factor": 0.4917739674486752,
+          "total_return": -0.5082260325513248,
+          "cagr": -0.21063363935194634,
+          "mdd_close": 0.5539505511702205,
+          "mdd_stress": 0.5665484908640622,
+          "trade_count": 237,
+          "yearly": {
+            "2023": {
+              "factor": 0.9403136048172261,
+              "mdd_stress": 0.25789455938694006,
+              "trades": 75
+            },
+            "2024": {
+              "factor": 0.8273003492289062,
+              "mdd_stress": 0.37695047395079984,
+              "trades": 80
+            },
+            "2025": {
+              "factor": 0.6321637780381031,
+              "mdd_stress": 0.4803378991435838,
+              "trades": 82
+            }
+          }
+        },
+        "delete_top10_trades": {
+          "terminal_factor": 0.31180768748806553,
+          "total_return": -0.6881923125119345,
+          "cagr": -0.32183700530258563,
+          "mdd_close": 0.7054632011843588,
+          "mdd_stress": 0.7112133367092817,
+          "trade_count": 232,
+          "yearly": {
+            "2023": {
+              "factor": 0.7744010117243799,
+              "mdd_stress": 0.30144432937218346,
+              "trades": 73
+            },
+            "2024": {
+              "factor": 0.8273003492289053,
+              "mdd_stress": 0.37695047395080017,
+              "trades": 80
+            },
+            "2025": {
+              "factor": 0.4866959126537641,
+              "mdd_stress": 0.5533229548277365,
+              "trades": 79
+            }
+          }
+        },
+        "delete_top5_symbols": {
+          "symbols": [
+            "ARKUSDT",
+            "BIDUSDT",
+            "DOLOUSDT",
+            "POPCATUSDT",
+            "SEIUSDT"
+          ],
+          "metrics": {
+            "terminal_factor": 0.5304470057041869,
+            "total_return": -0.4695529942958131,
+            "cagr": -0.1904662913131958,
+            "mdd_close": 0.5528808146433644,
+            "mdd_stress": 0.5851837401493517,
+            "trade_count": 202,
+            "yearly": {
+              "2023": {
+                "factor": 0.83772607731556,
+                "mdd_stress": 0.2266228984005032,
+                "trades": 63
+              },
+              "2024": {
+                "factor": 0.8067787997768066,
+                "mdd_stress": 0.2822959583177057,
+                "trades": 68
+              },
+              "2025": {
+                "factor": 0.7848478810383422,
+                "mdd_stress": 0.43486885705372613,
+                "trades": 71
+              }
+            }
+          }
+        }
+      },
+      "gates": {
+        "three_year_terminal_ge_1331": false,
+        "stress_mdd_le_40pct": true,
+        "at_least_3_calendar_years": true,
+        "every_year_factor_ge_3": false,
+        "best_year_log_share_le_50pct": false,
+        "delete_top5_terminal_ge_512": false,
+        "delete_top10_terminal_gt_1": false,
+        "trade_count_ge_60": true
+      },
+      "passed": false
+    }
+  ],
+  "verified_alpha_found": false,
+  "verified_specs": []
+}
