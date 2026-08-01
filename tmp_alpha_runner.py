@@ -2,6 +2,7 @@
 from __future__ import annotations
 import importlib.util
 import json
+import sys
 import time
 from pathlib import Path
 import duckdb
@@ -13,6 +14,7 @@ MODULE_PATH=Path(__file__).with_name('tmp-alpha-lifecycle.py')
 spec=importlib.util.spec_from_file_location('frozen_lifecycle',MODULE_PATH)
 mod=importlib.util.module_from_spec(spec)
 assert spec and spec.loader
+sys.modules[spec.name]=mod
 spec.loader.exec_module(mod)
 
 API='https://fapi.binance.com/fapi/v1/klines'
