@@ -1,0 +1,44 @@
+name: Temporary SQD Aave Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - sqd_probe.py
+      - sqd_mq_analysis.py
+      - .github/workflows/tmp-sqd-aave.yml
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp-alpha-sqd-20260801
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install --disable-pip-version-check requests pandas numpy scipy statsmodels pyarrow eth-abi eth-utils 'eth-hash[pycryptodome]'
+      - name: Run current SQD stage
+        run: |
+          if [ -f sqd_mq_analysis.py ]; then
+            rm -rf sqd-mq-results
+            python sqd_mq_analysis.py --out sqd-mq-results
+          else
+            rm -rf sqd-probe-results
+            python sqd_probe.py
+          fi
+      - name: Commit compact results to isolated branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add sqd-probe-results sqd-mq-results 2>/dev/null || true
+          git commit -m 'chore: SQD Aave validation results [alpha-result]' || exit 0
+          git pull --rebase origin tmp-alpha-sqd-20260801
+          git push origin HEAD:tmp-alpha-sqd-20260801
