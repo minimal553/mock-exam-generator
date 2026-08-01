@@ -6,12 +6,14 @@ on:
       - tmp-alpha-data-bridge-20260801
     paths:
       - tmp-alpha-lifecycle.py
+      - tmp_alpha_runner.py
       - .github/workflows/tmp-alpha-lifecycle.yml
   pull_request:
     branches:
       - main
     paths:
       - tmp-alpha-lifecycle.py
+      - tmp_alpha_runner.py
       - .github/workflows/tmp-alpha-lifecycle.yml
 
 permissions:
@@ -32,7 +34,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install --disable-pip-version-check duckdb pandas numpy
+        run: pip install --disable-pip-version-check duckdb pandas numpy requests
 
       - name: Download dynamic historical database
         run: |
@@ -45,7 +47,7 @@ jobs:
       - name: Run frozen validation
         run: |
           rm -rf tmp-alpha-results
-          python tmp-alpha-lifecycle.py --db availability.duckdb --out tmp-alpha-results
+          python tmp_alpha_runner.py --db availability.duckdb --out tmp-alpha-results
 
       - name: Commit compact results to temporary branch
         run: |
