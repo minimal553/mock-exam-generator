@@ -1,0 +1,135 @@
+{
+  "url": "https://1rpc.io/eth",
+  "block_number_response": {
+    "http": 200,
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": "0x1878119"
+  },
+  "latest": 25657625,
+  "pools": {
+    "v2": {
+      "address": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
+      "sample_range": [
+        12000000,
+        12005000
+      ],
+      "events": {
+        "Borrow": {
+          "signature": "Borrow(address,address,address,uint256,uint256,uint256,uint16)",
+          "topic0": "0xc6a898309e823ee50bac64e45ca8adba6690e99e7841c45d754e2a38e9019d9b",
+          "response": {
+            "http": 200,
+            "jsonrpc": "2.0",
+            "error": {
+              "code": -32602,
+              "message": "eth_getLogs is limited to 0 - 50 blocks range"
+            },
+            "id": 1
+          },
+          "count": null,
+          "first_log": null
+        },
+        "Repay": {
+          "signature": "Repay(address,address,address,uint256)",
+          "topic0": "0x4cdde6e09bb755c9a5589ebaec640bbfedff1362d4b255ebf8339782b9942faa",
+          "response": {
+            "http": 200,
+            "jsonrpc": "2.0",
+            "error": {
+              "code": -32602,
+              "message": "eth_getLogs is limited to 0 - 50 blocks range"
+            },
+            "id": 1
+          },
+          "count": null,
+          "first_log": null
+        },
+        "LiquidationCall": {
+          "signature": "LiquidationCall(address,address,address,uint256,uint256,address,bool)",
+          "topic0": "0xe413a321e8681d831f4dbccbca790d2952b56f977908e45be37335533e005286",
+          "response": {
+            "http": 200,
+            "jsonrpc": "2.0",
+            "error": {
+              "code": -32602,
+              "message": "eth_getLogs is limited to 0 - 50 blocks range"
+            },
+            "id": 1
+          },
+          "count": null,
+          "first_log": null
+        }
+      },
+      "historical_code_exists": false,
+      "historical_code_response": {
+        "http": 200,
+        "jsonrpc": "2.0",
+        "id": 1,
+        "error": {
+          "code": -32000,
+          "message": "historical state 8da999d414392e86fda9a3bc48a1fb35dcb8bbfef6c390c700e6822ad433e3e1 is not available"
+        }
+      }
+    },
+    "v3": {
+      "address": "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+      "sample_range": [
+        17000000,
+        17005000
+      ],
+      "events": {
+        "Borrow": {
+          "signature": "Borrow(address,address,address,uint256,uint8,uint256,uint16)",
+          "topic0": "0xb3d084820fb1a9decffb176436bd02558d15fac9b0ddfed8c465bc7359d7dce0",
+          "response": {
+            "http": 200,
+            "jsonrpc": "2.0",
+            "error": {
+              "code": -32602,
+              "message": "eth_getLogs is limited to 0 - 50 blocks range"
+            },
+            "id": 1
+          },
+          "count": null,
+          "first_log": null
+        },
+        "Repay": {
+          "signature": "Repay(address,address,address,uint256,bool)",
+          "topic0": "0xa534c8dbe71f871f9f3530e97a74601fea17b426cae02e1c5aee42c96c784051",
+          "response": {
+            "http": 200,
+            "jsonrpc": "2.0",
+            "error": {
+              "code": -32602,
+              "message": "eth_getLogs is limited to 0 - 50 blocks range"
+            },
+            "id": 1
+          },
+          "count": null,
+          "first_log": null
+        },
+        "LiquidationCall": {
+          "signature": "LiquidationCall(address,address,address,uint256,uint256,address,bool)",
+          "topic0": "0xe413a321e8681d831f4dbccbca790d2952b56f977908e45be37335533e005286",
+          "response": {
+            "http": 200,
+            "jsonrpc": "2.0",
+            "error": {
+              "code": -32602,
+              "message": "eth_getLogs is limited to 0 - 50 blocks range"
+            },
+            "id": 1
+          },
+          "count": null,
+          "first_log": null
+        }
+      },
+      "historical_code_exists": false,
+      "historical_code_response": {
+        "http": 504,
+        "raw": "<!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!--<![endif]-->\n<head>\n\n<title>1rpc.io | 504: Gateway time-out</title>\n<meta charset=\"UTF-8\" />\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n<meta http-equiv=\"X-UA-Compatible\" "
+      }
+    }
+  }
+}

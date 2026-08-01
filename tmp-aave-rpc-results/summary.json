@@ -1,0 +1,53 @@
+{
+  "endpoint_count": 5,
+  "agreements": {
+    "v2": {
+      "Borrow": {
+        "publicnode": null,
+        "llama": null,
+        "one_rpc": null,
+        "cloudflare": null,
+        "ankr": null
+      },
+      "Repay": {
+        "publicnode": null,
+        "llama": null,
+        "one_rpc": null,
+        "cloudflare": null,
+        "ankr": null
+      },
+      "LiquidationCall": {
+        "publicnode": null,
+        "llama": null,
+        "one_rpc": null,
+        "cloudflare": null,
+        "ankr": null
+      }
+    },
+    "v3": {
+      "Borrow": {
+        "publicnode": null,
+        "llama": null,
+        "one_rpc": null,
+        "cloudflare": null,
+        "ankr": null
+      },
+      "Repay": {
+        "publicnode": null,
+        "llama": null,
+        "one_rpc": null,
+        "cloudflare": null,
+        "ankr": null
+      },
+      "LiquidationCall": {
+        "publicnode": null,
+        "llama": null,
+        "one_rpc": null,
+        "cloudflare": null,
+        "ankr": null
+      }
+    }
+  },
+  "usable": [],
+  "two_endpoint_gate": false
+}
