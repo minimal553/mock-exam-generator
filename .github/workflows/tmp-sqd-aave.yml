@@ -25,20 +25,17 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: pip install --disable-pip-version-check requests pandas numpy scipy statsmodels pyarrow eth-abi eth-utils 'eth-hash[pycryptodome]'
-      - name: Run current SQD stage
-        run: |
-          if [ -f sqd_mq_analysis.py ]; then
-            rm -rf sqd-mq-results
-            python sqd_mq_analysis.py --out sqd-mq-results
-          else
-            rm -rf sqd-probe-results
-            python sqd_probe.py
-          fi
+      - name: Run frozen BCLX M-to-Q test
+        run: python sqd_mq_analysis.py --out sqd-mq-results
       - name: Commit compact results to isolated branch
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add sqd-probe-results sqd-mq-results 2>/dev/null || true
-          git commit -m 'chore: SQD Aave validation results [alpha-result]' || exit 0
+          git add sqd-mq-results/summary.json
+          git add sqd-mq-results/REPORT.md
+          git add sqd-mq-results/extraction_summary.json
+          git add sqd-mq-results/asset_map.csv
+          git add sqd-mq-results/matched_delever90.csv
+          git commit -m 'chore: frozen BCLX M-to-Q results [alpha-result]' || exit 0
           git pull --rebase origin tmp-alpha-sqd-20260801
           git push origin HEAD:tmp-alpha-sqd-20260801
