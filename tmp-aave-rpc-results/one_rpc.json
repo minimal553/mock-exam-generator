@@ -3,10 +3,10 @@
   "block_number_response": {
     "http": 200,
     "jsonrpc": "2.0",
-    "result": "0x1878123",
+    "result": "0x1878135",
     "id": 1
   },
-  "latest": 25657635,
+  "latest": 25657653,
   "pools": {
     "v2": {
       "address": "0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9",
@@ -132,7 +132,7 @@
         "id": null,
         "error": {
           "code": -32005,
-          "message": "Rate limit exceeded on Nodies public endpoints. For higher limits, create a free account at https://nodies.app and use a private endpoint. Enterprise: sales@nodies.org"
+          "message": "You have reached the maximum API usage limit of public. If you need higher throughput, please check out https://meganode.nodereal.io/"
         }
       }
     }

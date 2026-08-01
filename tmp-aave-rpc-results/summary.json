@@ -26,21 +26,21 @@
     },
     "v3": {
       "Borrow": {
-        "publicnode": null,
+        "publicnode": 43,
         "llama": null,
         "one_rpc": null,
         "cloudflare": null,
         "ankr": null
       },
       "Repay": {
-        "publicnode": null,
+        "publicnode": 21,
         "llama": null,
         "one_rpc": null,
         "cloudflare": null,
         "ankr": null
       },
       "LiquidationCall": {
-        "publicnode": null,
+        "publicnode": 0,
         "llama": null,
         "one_rpc": null,
         "cloudflare": null,
