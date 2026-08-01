@@ -6,6 +6,7 @@ on:
     paths:
       - sqd_mq_analysis.py
       - sqd_mq_fast_runner.py
+      - sqd_mq_fast_runner_v2.py
       - .github/workflows/tmp-sqd-aave.yml
 
 permissions:
@@ -25,17 +26,17 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: pip install --disable-pip-version-check requests pandas numpy scipy eth-utils 'eth-hash[pycryptodome]'
-      - name: Run accelerated equivalent BCLX M-to-Q test
-        run: python sqd_mq_fast_runner.py --out sqd-mq-fast-results
+      - name: Run continuation-safe equivalent BCLX M-to-Q test
+        run: python sqd_mq_fast_runner_v2.py --out sqd-mq-v2-results
       - name: Commit compact results to isolated branch
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add sqd-mq-fast-results/summary.json
-          git add sqd-mq-fast-results/REPORT.md
-          git add sqd-mq-fast-results/extraction_summary.json
-          git add sqd-mq-fast-results/asset_map.csv
-          git add sqd-mq-fast-results/matched_delever90.csv
-          git commit -m 'chore: accelerated equivalent BCLX results [alpha-result]' || exit 0
+          git add sqd-mq-v2-results/summary.json
+          git add sqd-mq-v2-results/REPORT.md
+          git add sqd-mq-v2-results/extraction_summary.json
+          git add sqd-mq-v2-results/asset_map.csv
+          git add sqd-mq-v2-results/matched_delever90.csv
+          git commit -m 'chore: continuation-safe BCLX results [alpha-result]' || exit 0
           git pull --rebase origin tmp-alpha-sqd-20260801
           git push origin HEAD:tmp-alpha-sqd-20260801
