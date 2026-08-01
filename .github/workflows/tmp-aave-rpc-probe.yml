@@ -1,0 +1,109 @@
+name: Temporary Aave Raw Log Probe
+
+on:
+  push:
+    branches: [tmp-alpha-data-bridge-20260801]
+    paths:
+      - .github/workflows/tmp-aave-rpc-probe.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/tmp-aave-rpc-probe.yml
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tmp-alpha-data-bridge-20260801
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --disable-pip-version-check requests eth-utils
+      - name: Probe archive RPCs and Aave event logs
+        shell: bash
+        run: |
+          mkdir -p tmp-aave-rpc-results
+          cat > /tmp/probe.py <<'PY'
+          import json,time
+          from pathlib import Path
+          import requests
+          from eth_utils import keccak
+
+          endpoints={
+            'publicnode':'https://ethereum-rpc.publicnode.com',
+            'llama':'https://eth.llamarpc.com',
+            'one_rpc':'https://1rpc.io/eth',
+            'cloudflare':'https://cloudflare-eth.com',
+            'ankr':'https://rpc.ankr.com/eth',
+          }
+          pools={
+            'v2':{'address':'0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9','sample_from':12000000,'sample_to':12005000,
+              'events':{
+                'Borrow':'Borrow(address,address,address,uint256,uint256,uint256,uint16)',
+                'Repay':'Repay(address,address,address,uint256)',
+                'LiquidationCall':'LiquidationCall(address,address,address,uint256,uint256,address,bool)'}},
+            'v3':{'address':'0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2','sample_from':17000000,'sample_to':17005000,
+              'events':{
+                'Borrow':'Borrow(address,address,address,uint256,uint8,uint256,uint16)',
+                'Repay':'Repay(address,address,address,uint256,bool)',
+                'LiquidationCall':'LiquidationCall(address,address,address,uint256,uint256,address,bool)'}},
+          }
+          def rpc(url,method,params,timeout=30):
+            try:
+              r=requests.post(url,json={'jsonrpc':'2.0','id':1,'method':method,'params':params},timeout=timeout)
+              try:b=r.json()
+              except Exception:return {'http':r.status_code,'raw':r.text[:500]}
+              return {'http':r.status_code,**b}
+            except Exception as e:return {'exception':repr(e)}
+          def result(x):return x.get('result') if isinstance(x,dict) else None
+          def code_at(url,address,block):
+            x=rpc(url,'eth_getCode',[address,hex(block)])
+            r=result(x);return isinstance(r,str) and r not in ('0x','0x0'),x
+          out={}
+          for name,url in endpoints.items():
+            rec={'url':url};bn=rpc(url,'eth_blockNumber',[]);rec['block_number_response']=bn
+            latest=int(result(bn),16) if isinstance(result(bn),str) else None
+            rec['latest']=latest;rec['pools']={}
+            for pv,p in pools.items():
+              q={'address':p['address'],'sample_range':[p['sample_from'],p['sample_to']],'events':{}}
+              exists,code_resp=code_at(url,p['address'],p['sample_from'])
+              q['historical_code_exists']=exists;q['historical_code_response']=code_resp
+              for en,sig in p['events'].items():
+                topic='0x'+keccak(text=sig).hex()
+                filt={'address':p['address'],'fromBlock':hex(p['sample_from']),'toBlock':hex(p['sample_to']),'topics':[topic]}
+                rr=rpc(url,'eth_getLogs',[filt],timeout=45);logs=result(rr)
+                q['events'][en]={'signature':sig,'topic0':topic,'response':rr,'count':len(logs) if isinstance(logs,list) else None,
+                  'first_log':logs[0] if isinstance(logs,list) and logs else None}
+              rec['pools'][pv]=q
+            out[name]=rec
+            Path(f'tmp-aave-rpc-results/{name}.json').write_text(json.dumps(rec,indent=2))
+          # agreement summary
+          summary={'endpoint_count':len(endpoints),'agreements':{},'usable':[]}
+          for pv in pools:
+            summary['agreements'][pv]={}
+            for en in pools[pv]['events']:
+              counts={n:r['pools'][pv]['events'][en]['count'] for n,r in out.items()}
+              summary['agreements'][pv][en]=counts
+          for n,r in out.items():
+            good=all(r['pools'][pv]['historical_code_exists'] and all(r['pools'][pv]['events'][e]['count'] is not None for e in pools[pv]['events']) for pv in pools)
+            if good:summary['usable'].append(n)
+          summary['two_endpoint_gate']=len(summary['usable'])>=2
+          Path('tmp-aave-rpc-results/summary.json').write_text(json.dumps(summary,indent=2))
+          print(json.dumps(summary,indent=2))
+          PY
+          python /tmp/probe.py
+      - name: Commit probe results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tmp-aave-rpc-results
+          git commit -m 'chore: Aave raw-log RPC probe result' || exit 0
+          git pull --rebase origin tmp-alpha-data-bridge-20260801
+          git push origin HEAD:tmp-alpha-data-bridge-20260801
