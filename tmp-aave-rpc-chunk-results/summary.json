@@ -1,0 +1,66 @@
+{
+  "usable": [
+    "drpc"
+  ],
+  "two_endpoint_gate": false,
+  "agreement": {
+    "v2": {
+      "Borrow": {
+        "one_rpc": 95,
+        "cloudflare": 0,
+        "blockpi": 0,
+        "blast": 0,
+        "drpc": 280,
+        "payload": 0,
+        "meow": 0
+      },
+      "Repay": {
+        "one_rpc": 46,
+        "cloudflare": 0,
+        "blockpi": 0,
+        "blast": 0,
+        "drpc": 136,
+        "payload": 0,
+        "meow": 0
+      },
+      "LiquidationCall": {
+        "one_rpc": 0,
+        "cloudflare": 0,
+        "blockpi": 0,
+        "blast": 0,
+        "drpc": 2,
+        "payload": 0,
+        "meow": 0
+      }
+    },
+    "v3": {
+      "Borrow": {
+        "one_rpc": 0,
+        "cloudflare": 0,
+        "blockpi": 0,
+        "blast": 0,
+        "drpc": 43,
+        "payload": 0,
+        "meow": 0
+      },
+      "Repay": {
+        "one_rpc": 0,
+        "cloudflare": 0,
+        "blockpi": 0,
+        "blast": 0,
+        "drpc": 21,
+        "payload": 0,
+        "meow": 0
+      },
+      "LiquidationCall": {
+        "one_rpc": 0,
+        "cloudflare": 0,
+        "blockpi": 0,
+        "blast": 0,
+        "drpc": 0,
+        "payload": 0,
+        "meow": 0
+      }
+    }
+  }
+}

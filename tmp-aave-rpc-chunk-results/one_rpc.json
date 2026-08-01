@@ -1,0 +1,392 @@
+{
+  "url": "https://1rpc.io/eth",
+  "configured_chunk": 50,
+  "latest": {
+    "http": 200,
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": "0x1878122"
+  },
+  "pools": {
+    "v2": {
+      "range": [
+        12000000,
+        12004999
+      ],
+      "events": {
+        "Borrow": {
+          "signature": "Borrow(address,address,address,uint256,uint256,uint256,uint16)",
+          "topic0": "0xc6a898309e823ee50bac64e45ca8adba6690e99e7841c45d754e2a38e9019d9b",
+          "requests": 100,
+          "count": 95,
+          "error_count": 68,
+          "errors": [
+            {
+              "a": 12000000,
+              "b": 12000049,
+              "response": {
+                "http": 429,
+                "jsonrpc": "2.0",
+                "id": null,
+                "error": {
+                  "code": -32005,
+                  "message": "Rate limit exceeded on Nodies public endpoints. For higher limits, create a free account at https://nodies.app and use a private endpoint. Enterprise: sales@nodies.org"
+                }
+              }
+            },
+            {
+              "a": 12000050,
+              "b": 12000099,
+              "response": {
+                "http": 429,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32029,
+                  "message": "Too Many Requests, Please apply an OnFinality API key or contact us to receive a higher rate limit"
+                },
+                "id": 1
+              }
+            },
+            {
+              "a": 12000150,
+              "b": 12000199,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "id": 1,
+                "error": {
+                  "code": 4444,
+                  "message": "pruned history unavailable"
+                }
+              }
+            }
+          ],
+          "first_log": {
+            "address": "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9",
+            "topics": [
+              "0xc6a898309e823ee50bac64e45ca8adba6690e99e7841c45d754e2a38e9019d9b",
+              "0x000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "0x000000000000000000000000952df1caa7d4c9a8cee768c65cc0f1e6c0f58b93",
+              "0x0000000000000000000000000000000000000000000000000000000000000000"
+            ],
+            "data": "0x000000000000000000000000dcd33426ba191383f1c9b431a342498fdac734880000000000000000000000000000000000000000000000000764e2c9020f62d8000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000005d7a79d7a96c91fd3d429",
+            "blockNumber": "0xb71b6b",
+            "transactionHash": "0x479a2c6d72d93cf720a155538d6f36c767e1c24b706784c1a2570d88e2be737d",
+            "transactionIndex": "0x9",
+            "blockHash": "0x2dfee032b5169840b7e1b91a28e427daad5d29b75425b58d41d172c70f5b6340",
+            "blockTimestamp": "0x60468cb3",
+            "logIndex": "0x9",
+            "removed": false
+          },
+          "last_log": {
+            "address": "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9",
+            "topics": [
+              "0xc6a898309e823ee50bac64e45ca8adba6690e99e7841c45d754e2a38e9019d9b",
+              "0x000000000000000000000000dac17f958d2ee523a2206206994597c13d831ec7",
+              "0x00000000000000000000000017080b589cdcbd10ebeaa24cb0096f4bb29eb52b",
+              "0x0000000000000000000000000000000000000000000000000000000000000000"
+            ],
+            "data": "0x00000000000000000000000017080b589cdcbd10ebeaa24cb0096f4bb29eb52b000000000000000000000000000000000000000000000000000000d18c2e28000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000486a9a5beff1769cbf39bc",
+            "blockNumber": "0xb72e16",
+            "transactionHash": "0x342ab92bd6df96cb4e92488b7240881d7f0f9e13e3f11fcd1f38073b93a7b9ba",
+            "transactionIndex": "0x83",
+            "blockHash": "0xeb57c473fbe8ee76d5866e0cec11e04bf79e5875eeb0bb32fa12ebb803c96a66",
+            "blockTimestamp": "0x60478976",
+            "logIndex": "0x140",
+            "removed": false
+          }
+        },
+        "Repay": {
+          "signature": "Repay(address,address,address,uint256)",
+          "topic0": "0x4cdde6e09bb755c9a5589ebaec640bbfedff1362d4b255ebf8339782b9942faa",
+          "requests": 100,
+          "count": 46,
+          "error_count": 57,
+          "errors": [
+            {
+              "a": 12000050,
+              "b": 12000099,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "result": {
+                  "code": 503,
+                  "message": "server unavailable"
+                },
+                "id": 1
+              }
+            },
+            {
+              "a": 12000200,
+              "b": 12000249,
+              "response": {
+                "http": 429,
+                "jsonrpc": "2.0",
+                "id": null,
+                "error": {
+                  "code": -32005,
+                  "message": "Rate limit exceeded on Nodies public endpoints. For higher limits, create a free account at https://nodies.app and use a private endpoint. Enterprise: sales@nodies.org"
+                }
+              }
+            },
+            {
+              "a": 12000250,
+              "b": 12000299,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "id": 1,
+                "error": {
+                  "code": 4444,
+                  "message": "pruned history unavailable"
+                }
+              }
+            }
+          ],
+          "first_log": {
+            "address": "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9",
+            "topics": [
+              "0x4cdde6e09bb755c9a5589ebaec640bbfedff1362d4b255ebf8339782b9942faa",
+              "0x0000000000000000000000000000000000085d4780b73119b644ae5ecd22b376",
+              "0x00000000000000000000000094a187cf8a3782ca481112d69faac55e77124dfb",
+              "0x000000000000000000000000498c5431eb517101582988fbb36431ddaac8f4b1"
+            ],
+            "data": "0x00000000000000000000000000000000000000000000000000780559fd9199a0",
+            "blockNumber": "0xb71b1e",
+            "transactionHash": "0xb1aa3d0fb5ad6fdc03da190172a9bb2fb36c4e846081570a720dfa46b060666b",
+            "transactionIndex": "0x39",
+            "blockHash": "0x4d8873e9d14f9cd6ef081ae24d13d01780fbeb56f49e8d98fcaf97e12da3c5eb",
+            "blockTimestamp": "0x0",
+            "logIndex": "0x61",
+            "removed": false
+          },
+          "last_log": {
+            "address": "0x7d2768de32b0b80b7a3454c06bdac94a69ddc7a9",
+            "topics": [
+              "0x4cdde6e09bb755c9a5589ebaec640bbfedff1362d4b255ebf8339782b9942faa",
+              "0x000000000000000000000000dac17f958d2ee523a2206206994597c13d831ec7",
+              "0x0000000000000000000000001cd6d86687adccaac08c12134aa569a780368b28",
+              "0x0000000000000000000000001cd6d86687adccaac08c12134aa569a780368b28"
+            ],
+            "data": "0x00000000000000000000000000000000000000000000000000000002790a85e7",
+            "blockHash": "0xab924a1673e0efd22731bcbbe6e3c3aad108f6a9bad4cf43d781d50179220e09",
+            "blockNumber": "0xb72d63",
+            "blockTimestamp": "0x60478088",
+            "transactionHash": "0xd93205af31d4117b132956a827dabb0a50be49e93475f600dc52f01f7ba1738e",
+            "transactionIndex": "0x67",
+            "logIndex": "0x7c",
+            "removed": false
+          }
+        },
+        "LiquidationCall": {
+          "signature": "LiquidationCall(address,address,address,uint256,uint256,address,bool)",
+          "topic0": "0xe413a321e8681d831f4dbccbca790d2952b56f977908e45be37335533e005286",
+          "requests": 100,
+          "count": 0,
+          "error_count": 100,
+          "errors": [
+            {
+              "a": 12000000,
+              "b": 12000049,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            },
+            {
+              "a": 12000050,
+              "b": 12000099,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            },
+            {
+              "a": 12000100,
+              "b": 12000149,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            }
+          ],
+          "first_log": null,
+          "last_log": null
+        }
+      }
+    },
+    "v3": {
+      "range": [
+        17000000,
+        17004999
+      ],
+      "events": {
+        "Borrow": {
+          "signature": "Borrow(address,address,address,uint256,uint8,uint256,uint16)",
+          "topic0": "0xb3d084820fb1a9decffb176436bd02558d15fac9b0ddfed8c465bc7359d7dce0",
+          "requests": 100,
+          "count": 0,
+          "error_count": 100,
+          "errors": [
+            {
+              "a": 17000000,
+              "b": 17000049,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            },
+            {
+              "a": 17000050,
+              "b": 17000099,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            },
+            {
+              "a": 17000100,
+              "b": 17000149,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            }
+          ],
+          "first_log": null,
+          "last_log": null
+        },
+        "Repay": {
+          "signature": "Repay(address,address,address,uint256,bool)",
+          "topic0": "0xa534c8dbe71f871f9f3530e97a74601fea17b426cae02e1c5aee42c96c784051",
+          "requests": 100,
+          "count": 0,
+          "error_count": 100,
+          "errors": [
+            {
+              "a": 17000000,
+              "b": 17000049,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            },
+            {
+              "a": 17000050,
+              "b": 17000099,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            },
+            {
+              "a": 17000100,
+              "b": 17000149,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            }
+          ],
+          "first_log": null,
+          "last_log": null
+        },
+        "LiquidationCall": {
+          "signature": "LiquidationCall(address,address,address,uint256,uint256,address,bool)",
+          "topic0": "0xe413a321e8681d831f4dbccbca790d2952b56f977908e45be37335533e005286",
+          "requests": 100,
+          "count": 0,
+          "error_count": 100,
+          "errors": [
+            {
+              "a": 17000000,
+              "b": 17000049,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            },
+            {
+              "a": 17000050,
+              "b": 17000099,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            },
+            {
+              "a": 17000100,
+              "b": 17000149,
+              "response": {
+                "http": 200,
+                "jsonrpc": "2.0",
+                "error": {
+                  "code": -32001,
+                  "message": "You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here: https://www.1rpc.io/#pricing"
+                },
+                "id": null
+              }
+            }
+          ],
+          "first_log": null,
+          "last_log": null
+        }
+      }
+    }
+  }
+}
