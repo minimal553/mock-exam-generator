@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install --disable-pip-version-check requests eth-utils
+      - run: pip install --disable-pip-version-check requests eth-utils 'eth-hash[pycryptodome]'
       - name: Probe archive RPCs and Aave event logs
         shell: bash
         run: |
@@ -84,7 +84,6 @@ jobs:
               rec['pools'][pv]=q
             out[name]=rec
             Path(f'tmp-aave-rpc-results/{name}.json').write_text(json.dumps(rec,indent=2))
-          # agreement summary
           summary={'endpoint_count':len(endpoints),'agreements':{},'usable':[]}
           for pv in pools:
             summary['agreements'][pv]={}
